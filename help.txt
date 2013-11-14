@@ -1,2 +1,2 @@
-test for help update.
-version 3.
+For createrequest@wartisan.com, listener.js,
+  inner_content() --> clickReporter() --> passXpath()
