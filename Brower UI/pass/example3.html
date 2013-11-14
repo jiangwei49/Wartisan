@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <script type="text/javascript" src="jquery.min.js"></script>
+        <SCRIPT LANGUAGE="javascript">
+        $(document).ready(function(){
+         $("#submit").click(function(){
+
+             var data = $('#jin').val();
+
+                $.ajax({
+                        type: "POST",
+                        url: "iframe.php",
+                        data: {'name':data},
+                        success: function(msg)
+                        {
+                            console.log(msg)
+                            alert(msg);
+                     //    $('#f1').attr('src', $('#f1').attr('src'));
+                        }
+                });
+         
+         });
+         
+         $("#kika").click(function(){
+           $('#f1').attr('src', $('#f1').attr('src'));
+         });
+        });
+
+        </SCRIPT>
+    </head>
+<!--<form method="post" action="#">-->
+    <input type="text" id="jin" name="name" value=""/>
+    <input type="submit" id="submit" name="submit" value="submit"/>
+    <button id="kika">refresh</button>
+<!--</form>-->
+<iframe id="#f1" src="iframe.php"></iframe>
+</html>
