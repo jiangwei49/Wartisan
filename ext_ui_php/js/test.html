@@ -1,0 +1,23 @@
+<script src="jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+$( ".target" ).change(function() {
+alert( $(this).val());
+});
+
+});
+
+</script>
+
+<form>
+<input class="target" type="text" value="Field 1"><div class="target"></div>
+<input class="target" type="text" value="Field 2"><div id='kika1'></div>
+<select class="target">
+<option value="option1" selected="selected">Option 1</option>
+<option value="option2">Option 2</option>
+</select>
+</form>
+<div id="other">
+Trigger the handler
+</div>
+<button id="jin">jin</button>
