@@ -24,11 +24,11 @@
 <input type="button" id="deleteb" class="lfunc" name="deleteb" value="Delete"/>
 <input type="button" id="timelb" class="lfunc" name="timelb" value="Timeline"/>
 </div>-->
-<div id="lsubject"><h3>subject: wartisan main page</h3></div>
+<div id="lsubject111"><h3><!--subject: wartisan main page--></h3></div>
 <form >
 <table id='w_table'>
 <tr>
-<td><div align="right">Title:</div></td>
+<td><div align="right">Request:</div></td>
 <td><input type="text" id="w_title" name="title" value=""></td>
 </tr>
 <tr>
@@ -38,8 +38,7 @@
 </table>
 <!--   <input type="text" id="newb" class="lfunc" name="newb" value="New!"/> -->
 <div id="lmain">
-<ol id="lupditem">
-</ol>
+	<ol id="lupditem"></ol>
 </div>
 <div id="ldate">
 <div style="float: left">
@@ -59,7 +58,7 @@
 </div>
 <div id="lcommit">
 <input type="button" id="save" class="lcommit" name="saveb" value="Save"/>
-<input type="button" id="refresh" class="lcommit" name="refresh" value="refresh"/>
+<input type="button" id="refresh" class="lcommit" name="refresh" value="Refresh"/>
 
 </div>
 </form>
