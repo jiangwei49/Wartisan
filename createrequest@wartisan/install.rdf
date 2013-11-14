@@ -3,7 +3,7 @@
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
 	<Description about="urn:mozilla:install-manifest">
-		<em:id>createrequest@wartisan.com</em:id>
+		<em:id>createrequest@wartisan</em:id>
 		<em:name>Wartisan Request UI</em:name>
 		<em:version>1.0</em:version>
 		<em:type>2</em:type>
