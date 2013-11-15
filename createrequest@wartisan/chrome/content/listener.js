@@ -14,9 +14,11 @@ var browser;
 //var mainWindow;
 var $mb = jQuery.noConflict();
 var doc;
-
+var path_style; //csspath or xpath
+var action_type; // update or action
 //for ajax;
 var xmlHttp;
+var countClicks = 0; //numberof clicks on right side after started update.
 
 function S_xmlhttprequest() {
   if (window.ActiveXObject) {
@@ -186,14 +188,47 @@ function readXPath(element) {
     paths.splice(0, 0, tagName + pathIndex);
   }
 
+  //var reuslt = paths.length ? "/" + paths.join("/") : null;
+  //alert(result);
   return paths.length ? "/" + paths.join("/") : null;
 
 }
 
+function readCssPath(element) {
+  // if (!(el instanceof Element)) {
+  //   alert("not an element");
+  //   return;
+  // }
+  var paths = [];
 
-function pass_xpath() {
+  for (; element && element.nodeType == 1; element = element.parentNode) {
+    var selector = this.getElementCSSSelector(element);
+    paths.splice(0, 0, selector);
+  }
 
-  alert('start');
+  return paths.length ? paths.join(" ") : null;
+}
+
+function getElementCSSSelector(element)
+{
+  if (!element || !element.localName)
+    return "null";
+
+  var label = element.localName.toLowerCase();
+  if (element.id)
+    label += "#" + element.id;
+
+  if (element.classList && element.classList.length > 0)
+    label += "." + element.classList.item(0);
+
+  return label;
+};
+
+function pass_path(the_path_style, the_action_type) {
+  path_style = the_path_style;
+  //alert(path_style);
+  action_type = the_action_type;
+  //alert(action_type);
   $mb = jQuery.noConflict();
   doc = window.content.document;
 
@@ -204,9 +239,9 @@ function pass_xpath() {
   var olElement = sidebardoc.getElementById("lupditem");
   var liElement = sidebardoc.createElement("li");
   //if no click on right side, new textarea will not be appended on leftside.
-  if ($mb("li", wdoc).length <= countClicks) {  // true means we got a new update, to add into ui
+  if ($mb("li", wdoc).length <= countClicks) { // true means we got a new update, to add into ui
     olElement.appendChild(liElement);
-    var idnum = "inp" + $mb("li", wdoc).length;  // the id for the inserted table
+    var idnum = "inp" + $mb("li", wdoc).length; // the id for the inserted table
     var remnum = "rem" + $mb("li", wdoc).length; // the id for the remove icon
     var addnum = "add" + $mb("li", wdoc).length; // addx
 
@@ -218,9 +253,9 @@ function pass_xpath() {
       unregisterMyListener();
       $mb('*', doc).removeClass("tcurrent");
       var leng = $mb("li", wdoc).length; // how many li elements we got, each "VerifyText" textarea counts
-      alert("li elements = " + leng);
-      alert($mb(this, wdoc).attr("id").length); // 4
-      alert($mb(this, wdoc).attr("id")); // rem1
+      //alert("li elements = " + leng);
+      //alert($mb(this, wdoc).attr("id").length); // 4
+      //alert($mb(this, wdoc).attr("id")); // rem1
       var m = parseInt($mb(this, wdoc).attr("id").substr($mb(this, wdoc).attr("id").length - 1));
       var n = parseInt(m) - 1;
       var j = parseInt(m) + 1;
@@ -259,17 +294,19 @@ function pass_xpath() {
 
 }
 
-var countClicks = 0; //numberof clicks on right side after started update.
 
+
+// once select an element in main window, sidebar will create a text area
 function clickReporter(e) {
   var wartisan_sidebar = top.document.getElementById('sidebar').contentWindow.document.getElementById("createrequestBrowser").contentWindow;
   var wdoc = wartisan_sidebar.document;
 
+  $mb = jQuery.noConflict();
 
   countClicks = $mb("li", wdoc).length;
 
   e = e || window.event;
-  var xpath = readXPath(e.target);
+  //var xpath = readXPath(e.target);
 
   // Wei: "sidebar" is the default ID for FF sidebar
   // Wei: ID createrequestBrowser was defined in sidebar.xul
@@ -277,8 +314,6 @@ function clickReporter(e) {
   mySidebarDoc = mySidebarDoc.document;
 
   mySidebarDoc = unwrap(mySidebarDoc);
-
-
 
   var request_steps = mySidebarDoc.getElementById("inp" + $mb("li", wdoc).length); // get the element <span id="catchdetails"></span>
   var textareaId = "inp" + countClicks;
@@ -289,45 +324,127 @@ function clickReporter(e) {
   }
 
   // pringt all need information for right side browser.
+
   var wartisanHtml = '';
   var loopCount = 1;
   var style = '';
-  for (var x in inner_content(e)) {
-    if ((x === 'pageUrl') || (x === 'action') || (x === 'pathType') || (x === 'pathText')) {
-      style = "style='display:none'";
+
+  if (action_type == "update") {
+    if (inner_content(e)) {
+      for (var x in inner_content(e)) {
+        if ((x === 'pageUrl') || (x === 'action') || (x === 'pathType') || (x === 'pathText')) {
+          style = "style='display:none'";
+        } else {
+          style = '';
+        }
+        wartisanHtml += "<tr " + style + "><td>" + x + "</td><td><textarea class='change' id='" + textareaId + "_" + loopCount + "' style='max-height: 70px; min-width: 200px;min-height: 70px; max-width: 200px;'>" + inner_content(e)[x] + "</textarea></td></tr>";
+        loopCount++;
+
+      }
     } else {
-      style = '';
-    }
-    wartisanHtml += "<tr " + style + "><td>" + x + "</td><td><textarea class='change' id='" + textareaId + "_" + loopCount + "' style='max-height: 70px; min-width: 200px;min-height: 70px; max-width: 200px;'>" + inner_content(e)[x] + "</textarea></td></tr>";
-    loopCount++;
-
-  }
-
-
-  request_steps.innerHTML += wartisanHtml;
-
-  //prevent click <a> tag and <img> tag
-  var oTarget = e.target || e.srcElement; //???????????
-  tagn = oTarget.tagName;
-  if (tagn.toLowerCase() == "a" || tagn.toLowerCase() == "img") {
-
-    if (e && e.preventDefault) {
-      e.preventDefault();
-    } else {
-
-      window.event.returnValue = false;
+      alert("false");
+      var num = "rem" + $mb("input[id^='rem']", wdoc).size();
+      alert("remove wrong step " + num);
+      $mb("input[id=" + num + "]", wdoc).click();
     }
 
-    unregisterMyListener();
-    $mb('*', doc).removeClass("tcurrent");
-    return false;
+    request_steps.innerHTML += wartisanHtml;
+
+    //prevent click <a> tag and <img> tag
+    var oTarget = e.target || e.srcElement; //???????????
+    tagn = oTarget.tagName;
+    if (tagn.toLowerCase() == "a" || tagn.toLowerCase() == "img") {
+
+      if (e && e.preventDefault) {
+        e.preventDefault();
+      } else {
+
+        window.event.returnValue = false;
+      }
+
+      unregisterMyListener();
+      $mb('*', doc).removeClass("tcurrent");
+      return false;
+    } else {
+      unregisterMyListener();
+      $mb('*', doc).removeClass("tcurrent");
+    }
+  } else if (action_type == "action") {
+    //alert("handling actions");
+    if (catch_element_action(e)) {
+      for (var x in catch_element_action(e)) {
+        if ((x === 'pageUrl') || (x === 'pathType') || (x === 'pathText')) {
+          style = "style='display:none'";
+        } else {
+          style = '';
+        }
+        wartisanHtml += "<tr " + style + "><td>" + x + "</td><td><span>" + catch_element_action(e)[x] + "</span><textarea style='display:none' class='change' id='" + textareaId + "_" + loopCount + "' style='max-height: 70px; min-width: 200px;min-height: 70px; max-width: 200px;'>" + catch_element_action(e)[x] + "</textarea></td></tr>";
+        loopCount++;
+
+      }
+    } else {
+      alert("false");
+      var num = "rem" + $mb("input[id^='rem']", wdoc).size();
+      alert("remove wrong step " + num);
+      $mb("input[id=" + num + "]", wdoc).click();
+    }
+
+    request_steps.innerHTML += wartisanHtml;
+
+    //prevent click <a> tag and <img> tag
+    var oTarget = e.target || e.srcElement; //???????????
+    tagn = oTarget.tagName;
+    if (tagn.toLowerCase() == "a" || tagn.toLowerCase() == "img") {
+
+      if (e && e.preventDefault) {
+        e.preventDefault();
+      } else {
+
+        window.event.returnValue = false;
+      }
+
+      unregisterMyListener();
+      $mb('*', doc).removeClass("tcurrent");
+      return false;
+    } else {
+      unregisterMyListener();
+      $mb('*', doc).removeClass("tcurrent");
+    }
   } else {
-    unregisterMyListener();
-    $mb('*', doc).removeClass("tcurrent");
+    alert("unknow action type: " + action_type);
   }
+
+  
+  
+
+
+  
 
 }
 
+// get action on the element
+function catch_element_action(e) {
+  e = e || window.event;
+  var sscontent = new Array();
+  sscontent['pageUrl'] = content.document.URL;
+  sscontent['action'] = action_type;
+  sscontent['pathType'] = path_style;
+  if (path_style=="xpath") {
+    sscontent['pathText'] = readXPath(e.target);
+  } else if (path_style=="csspath") {
+    sscontent['pathText'] = readCssPath(e.target);
+  } else {
+    return false;
+  }
+  //alert(e.type);
+  
+  sscontent['did'] = e.type;
+  //alert(e.type);
+  return sscontent;
+  // now just track the action
+}
+
+// get inner content of the element
 function inner_content(e) {
   e = e || window.event;
   var sscontent = new Array();
@@ -335,9 +452,20 @@ function inner_content(e) {
   sscontent['pageUrl'] = content.document.URL;
 
   //current target xpath
-  sscontent['action'] = 'update';
-  sscontent['pathType'] = 'xPath';
-  sscontent['pathText'] = readXPath(e.target);
+  sscontent['action'] = action_type;
+  if (path_style == "csspath") {
+    //alert("report csspath");
+    sscontent['pathType'] = path_style;
+    //alert(readCssPath(e.target));
+    sscontent['pathText'] = readCssPath(e.target);
+    //alert("finish reading csspath");
+  } else if (path_style == "xpath") {
+    sscontent['pathType'] = path_style;
+    //alert(readXPath(e.target));
+    sscontent['pathText'] = readXPath(e.target);
+  } else {
+    //alert("unknow path style");
+  }
   /*check if this target has child nodes.*/
   var haschild = $mb(e.target, doc).children();
   var inlineEle = "";
@@ -388,25 +516,53 @@ function inner_content(e) {
 
     var finalContent = String(rawContent).replace(/^\s+|\s+$/g, '');
 
+    if (finalContent.length == 0) {
+      sscontent["verifyText"] = "#n/a#";
 
-    sscontent["verifyText"] = finalContent;
+    } else {
+      sscontent["verifyText"] = finalContent;
+      //alert("content=" + finalContent);
+    }
+
     //            }
 
     /*end check <br>*/
 
-    var tagName = $mb(e.target, doc).prop("tagName");
+    var tagName = $mb(e.target, doc).prop("tagName").toUpperCase();
+    //alert(tagName);
     //check targets tagname
     switch (tagName) {
       case "IMG":
         var properties = GetAttributes(e.target);
         for (var x in properties) {
-          sscontent[tagName + "_" + x] = properties[x];
+          sscontent[tagName + "_" + x] = properties[x]; // IMG_src, IMG_alt, etc.
         }
 
         sscontent["tagname"] = tagName;
 
         //if this image is a link; 
-        var isLink = $mb(e.target, doc).parent().prop("tagName");
+        var isLink = $mb(e.target, doc).parent().prop("tagName").toUpperCase();
+        if (isLink == "A") {
+          var linkProperties = GetAttributes(e.target.parentNode);
+
+          for (var y in linkProperties) {
+
+            sscontent[isLink + "_" + y] = linkProperties[y];
+
+          }
+        }
+        break;
+
+      case "SPAN":
+        var properties = GetAttributes(e.target);
+        for (var x in properties) {
+          sscontent[tagName + "_" + x] = properties[x]; // IMG_src, IMG_alt, etc.
+        }
+
+        sscontent["tagname"] = tagName;
+
+        //if this image is a link; 
+        var isLink = $mb(e.target, doc).parent().prop("tagName").toUpperCase();
         if (isLink == "A") {
           var linkProperties = GetAttributes(e.target.parentNode);
 

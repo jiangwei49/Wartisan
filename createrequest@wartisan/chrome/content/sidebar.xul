@@ -9,9 +9,8 @@
 	<script type="application/x-javascript" src="chrome://createrequest/content/helper.js" /> 
 	<script type="application/x-javascript" src="chrome://createrequest/content/listener.js"/>
      <hbox id="fbContentBox">
-            <button label='Update (fuzzy)' oncommand="pass_csspath()"></button>
-            <button label='Update (exact)' oncommand="pass_xpath()"></button>
-            <button label='Record' oncommand="pass_xpath()"></button>
+            <button label='Update' oncommand="pass_path('csspath', 'update')"></button>
+            <button label='Action' oncommand="pass_path('xpath', 'action')"></button>
     </hbox>
 
 	<browser id="createrequestBrowser" type="content" flex="1"/>

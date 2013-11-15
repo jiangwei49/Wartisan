@@ -58,7 +58,7 @@
 </div>
 <div id="lcommit">
 <input type="button" id="save" class="lcommit" name="saveb" value="Save"/>
-<input type="button" id="refresh" class="lcommit" name="refresh" value="Refresh"/>
+<!-- <input type="button" id="refresh" class="lcommit" name="refresh" value="Refresh"/> -->
 
 </div>
 </form>
