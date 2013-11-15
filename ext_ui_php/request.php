@@ -15,6 +15,7 @@
 <script src="js/jquery-customize-br.js"></script>
 </head>
 
+
 <body>
 <div id="lpanel">
 
@@ -45,7 +46,7 @@
 <table>
 <tr>
 <td><div align="right">Start Date:</div></td>
-<td><input type="text" id="startdate" name="startdate" class="tcal" value="" readonly="readonly"></td>
+<td><input type="text" id="startdate" name="startdate" class="tcal" value=""></td>
 </tr>
 <tr>
 <td><div align="right">End Date:</div></td>
@@ -63,5 +64,19 @@
 </div>
 </form>
 </div>
+<script>
+var today = new Date();
+
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+var yyyy = today.getFullYear();
+if(dd<10){dd='0'+dd};
+if(mm<10){mm='0'+mm};
+
+today = mm+'/'+dd+'/'+yyyy;
+
+document.getElementById('startdate').value = today;
+document.getElementById('enddate').value = today;
+</script>
 </body>
 </html>
