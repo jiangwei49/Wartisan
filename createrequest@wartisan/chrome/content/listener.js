@@ -184,7 +184,7 @@ function readXPath(element) {
     }
 
     var tagName = element.nodeName.toLowerCase();
-    var pathIndex = (index ? "[" + (index + 1) + "]" : "");
+    var pathIndex = (index ? "[" + (index + 1) + "]" : "[1]");
     paths.splice(0, 0, tagName + pathIndex);
   }
 
@@ -430,8 +430,10 @@ function catch_element_action(e) {
   sscontent['action'] = action_type;
   sscontent['pathType'] = path_style;
   if (path_style=="xpath") {
+    //alert(readXPath(e.target));
     sscontent['pathText'] = readXPath(e.target);
   } else if (path_style=="csspath") {
+    //alert(readCssPath(e.target));
     sscontent['pathText'] = readCssPath(e.target);
   } else {
     return false;
