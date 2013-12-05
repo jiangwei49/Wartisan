@@ -5,4 +5,4 @@ overlay chrome://browser/content/browser.xul chrome://createrequest/content/fire
 locale	createrequest	en-US	locale/en-US/
 
 skin	createrequest	classic/1.0	skin/
-style	chrome://global/content/customizeToolbar.xul	chrome://createrequest/skin/style.css
+style	chrome://global/content/sidebar.xul	chrome://createrequest/skin/style.css

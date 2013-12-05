@@ -1,16 +1,24 @@
 <?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
 <page id="createRequestSidebar"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 		onload='onLoadCreateRequestSidebar();'
 >
-        <script type="application/x-javascript" src="chrome://createrequest/content/jquery.js">//</script>
+    <script type="application/x-javascript" src="chrome://createrequest/content/jquery.js">//</script>
 	<script type="application/x-javascript" src="chrome://createrequest/content/requestuilibs.js" />
 	<script type="application/x-javascript" src="chrome://createrequest/content/createRequest.js" /> 
 	<script type="application/x-javascript" src="chrome://createrequest/content/helper.js" /> 
 	<script type="application/x-javascript" src="chrome://createrequest/content/listener.js"/>
+	<script type="application/x-javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script type="application/x-javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
      <hbox id="fbContentBox">
-            <button label='Update' oncommand="pass_path('csspath', 'update')"></button>
-            <button label='Action' oncommand="pass_path('xpath', 'action')"></button>
+     	
+        <button class='xulbutton' label='Verify' oncommand="pass_path('xpath', 'verify')"></button>
+        <button class='xulbutton' label="Search" oncommand="pass_path('csspath', 'search')"></button>
+        <button class='xulbutton' label='Record' oncommand="pass_path('xpath', 'action')"></button>
+        <button label='Help' id="help_button" oncommand="showHelp()"  dir='reverse'></button>
     </hbox>
 
 	<browser id="createrequestBrowser" type="content" flex="1"/>

@@ -7,7 +7,6 @@ const NOTIFY_STATE_DOCUMENT =
 const STATE_STOP =
   Components.interfaces.nsIWebProgressListener.STATE_STOP;
 
-
 // The Global CreateRequest Sidebar Object
 var mysidebar;
 var browser;
@@ -19,6 +18,7 @@ var action_type; // update or action
 //for ajax;
 var xmlHttp;
 var countClicks = 0; //numberof clicks on right side after started update.
+//var isStartPageSet = false;
 
 function S_xmlhttprequest() {
   if (window.ActiveXObject) {
@@ -51,18 +51,17 @@ function registerMyListener() {
   // alert("registerMyListener");
   // Wei: myListener is from ClickMap
   //alert("registerMyListener1: "+top.getBrowser());
-  top.getBrowser().addProgressListener(myListener, NOTIFY_STATE_DOCUMENT);
+  //top.getBrowser().addProgressListener(myListener, NOTIFY_STATE_DOCUMENT);
   // Wei: clickReporter is used for Create Request
   top.getBrowser().addEventListener("click", clickReporter, false);
   top.getBrowser().addEventListener("mouseover", wartisan_mouseover, false);
   //alert("registerMyListener2: "+top.getBrowser());
 }
 
-
 function unregisterMyListener() {
   try {
     //alert("unregisterMyListener1: "+top.getBrowser());
-    top.getBrowser().removeProgressListener(myListener);
+    //top.getBrowser().removeProgressListener(myListener);
     // Wei: have to clickReporter, otherwise even we close sidebar, this listener will keep working
     // Wei: this should work with "Recording" button later
     ////alert("unregisterMyListener");
@@ -71,69 +70,68 @@ function unregisterMyListener() {
     //alert("unregisterMyListener2: "+top.getBrowser());
   } catch (ex) {}
 }
-var removeOuterRedline = 1 //used for remove class
-  function wartisan_mouseover(e) {
-    e = e || window.event;
 
-    var sss = Components.classes["@mozilla.org/content/style-sheet-service;1"].getService(Components.interfaces.nsIStyleSheetService);
-    var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
-    var uri = ios.newURI('chrome://createrequest/skin/style.css', null, null);
-    sss.loadAndRegisterSheet(uri, sss.USER_SHEET);
+var removeOuterRedline = 1; //used for remove class
+function wartisan_mouseover(e) {
+  e = e || window.event;
 
-    $mb('*', doc).removeClass("tcurrent");
-    var test = $mb('.tcurrent', doc);
-    if (test.length == 0) {
-      //alert(doc);
-    }
+  var sss = Components.classes["@mozilla.org/content/style-sheet-service;1"].getService(Components.interfaces.nsIStyleSheetService);
+  var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
+  var uri = ios.newURI('chrome://createrequest/skin/style.css', null, null);
+  sss.loadAndRegisterSheet(uri, sss.USER_SHEET);
 
-    // $mb('html',doc).removeClass("tcurrent");
-    // alert(e.target);
-    //  $mb(e.target,doc).addClass("tcurrent");
-    if (removeOuterRedline > 1) {
-      $mb(e.target, doc).addClass("tcurrent");
-    }
-    removeOuterRedline = removeOuterRedline + 1;
-
+  $mb('*', doc).removeClass("tcurrent");
+  var test = $mb('.tcurrent', doc);
+  if (test.length == 0) {
+    //alert(doc);
   }
 
-
-
-var myListener = {
-
-  onLocationChange: function(aProgress, aRequest, aURI) {
-    /*if (!aProgress.isLoadingDocument) {
-      //getSideBarBrowser().contentWindow.external.UpdateFSettings();
-      //
-    }*/
-    ///alert("444");
-  },
-  onStateChange: function(aProgress, aRequest, aFlag, aStatus) {
-    //if (aFlag & STATE_STOP) {
-    if (aFlag == STATE_PAGE_LOADED) {
-      var attributes = new Array();
-      dispatchClickMapEvent('clickMapUpdateEvent', attributes);
-
-    }
-    //alert("333");
-  },
-  onProgressChange: function(a, b, c, d, e, f) {},
-  onStatusChange: function(a, b, c, d) {},
-  onSecurityChange: function(a, b, c) {},
-  onLinkIconAvailable: function(a, b) {},
-  stateAnalyzer: function(abc) {
-    var the_State = '';
-    if (abc & 1) the_State += ' START<br>';
-    if (abc & 2) the_State += ' REDIRECTING<br>';
-    if (abc & 4) the_State += ' TRANSFERRING<br>';
-    if (abc & 8) the_State += ' NEGOTIATING<br>';
-    if (abc & 16) the_State += ' STOP<br>';
-    if (abc & 65536) the_State += ' IS_REQUEST<br>';
-    if (abc & 131072) the_State += ' IS_DOCUMENT<br>';
-    if (abc & 262144) the_State += ' IS_NETWORK<br>';
-    if (abc & 524288) the_State += ' IS_WINDOW<br>';
-    return the_State;
+  // $mb('html',doc).removeClass("tcurrent");
+  // alert(e.target);
+  //  $mb(e.target,doc).addClass("tcurrent");
+  if (removeOuterRedline > 1) {
+    $mb(e.target, doc).addClass("tcurrent");
   }
-};
+  removeOuterRedline = removeOuterRedline + 1;
+
+}
+
+// var myListener = {
+
+//   onLocationChange: function(aProgress, aRequest, aURI) {
+//     /*if (!aProgress.isLoadingDocument) {
+//       //getSideBarBrowser().contentWindow.external.UpdateFSettings();
+//       //
+//     }*/
+//     ///alert("444");
+//   },
+//   onStateChange: function(aProgress, aRequest, aFlag, aStatus) {
+//     //if (aFlag & STATE_STOP) {
+//     if (aFlag == STATE_PAGE_LOADED) {
+//       var attributes = new Array();
+//       dispatchClickMapEvent('clickMapUpdateEvent', attributes);
+
+//     }
+//     //alert("333");
+//   },
+//   onProgressChange: function(a, b, c, d, e, f) {},
+//   onStatusChange: function(a, b, c, d) {},
+//   onSecurityChange: function(a, b, c) {},
+//   onLinkIconAvailable: function(a, b) {},
+//   stateAnalyzer: function(abc) {
+//     var the_State = '';
+//     if (abc & 1) the_State += ' START<br>';
+//     if (abc & 2) the_State += ' REDIRECTING<br>';
+//     if (abc & 4) the_State += ' TRANSFERRING<br>';
+//     if (abc & 8) the_State += ' NEGOTIATING<br>';
+//     if (abc & 16) the_State += ' STOP<br>';
+//     if (abc & 65536) the_State += ' IS_REQUEST<br>';
+//     if (abc & 131072) the_State += ' IS_DOCUMENT<br>';
+//     if (abc & 262144) the_State += ' IS_NETWORK<br>';
+//     if (abc & 524288) the_State += ' IS_WINDOW<br>';
+//     return the_State;
+//   }
+// };
 
 
 // This function is called right when the sidebar is opened
@@ -209,8 +207,7 @@ function readCssPath(element) {
   return paths.length ? paths.join(" ") : null;
 }
 
-function getElementCSSSelector(element)
-{
+function getElementCSSSelector(element) {
   if (!element || !element.localName)
     return "null";
 
@@ -225,6 +222,7 @@ function getElementCSSSelector(element)
 };
 
 function pass_path(the_path_style, the_action_type) {
+
   path_style = the_path_style;
   //alert(path_style);
   action_type = the_action_type;
@@ -238,17 +236,30 @@ function pass_path(the_path_style, the_action_type) {
 
   var olElement = sidebardoc.getElementById("lupditem");
   var liElement = sidebardoc.createElement("li");
+
+  updateStartingPage(sidebardoc);
+
+  // if (!isStartPageSet) {
+  //   startingPageUrl = content.document.URL;
+  //   //alert(startingPageUrl);
+  //   isStartPageSet = true;
+  //   sidebardoc.getElementById("currentUrl").innerHTML = startingPageUrl;
+  // }
+
   //if no click on right side, new textarea will not be appended on leftside.
   if ($mb("li", wdoc).length <= countClicks) { // true means we got a new update, to add into ui
     olElement.appendChild(liElement);
     var idnum = "inp" + $mb("li", wdoc).length; // the id for the inserted table
     var remnum = "rem" + $mb("li", wdoc).length; // the id for the remove icon
+    var expandnum = "expand" + $mb("li", wdoc).length; // the step id for the expand/collapse icon
     var addnum = "add" + $mb("li", wdoc).length; // addx
+    var stepDescriptionNum = "stepDes" + $mb("li", wdoc).length;  // the test step description
 
     //  $mb("li:last",wdoc).html("<span style='display: inline-block; vertical-align: middle'><textarea style='width: 230px; height: 200px; max-height: 100px; min-width: 250px;min-height: 200px; max-width: 230px;margin-left:10px' id='"+idnum+"' name='"+idnum+"'></textarea></span><input style='width: 80px; height: 21px;margin-left:10px' type='button' value='Remove' id='"+remnum+"' name='"+remnum+"' />");
-    $mb("li:last", wdoc).html("<table style='display: inline-block; vertical-align: top' id='" + idnum + "' name='" + idnum + "'></table><input style='width: 15px; height: 15px;background:url(images/remove_icon-15x15.png) transparent; border:none;margin:0px 5px 0px 0px;cursor:pointer;' type='button' value='' id='" + remnum + "' name='" + remnum + "' />");
+    $mb("li:last", wdoc).html("<b onclick=sectionClick('" + expandnum + "') class='step_description'><span><img src='images/collapse_15x15.png'/> </span> <span id='" + stepDescriptionNum + "''></span> <input style='width: 15px; height: 15px;background:url(images/delete_15x15.png) transparent; border:none;margin:0px 5px 0px 0px;cursor:pointer;' type='button' value='' id='" + remnum + "' name='" + remnum + "' /></b><div class='" + expandnum + "'><table style='display: inline-block; vertical-align: top' id='" + idnum + "' name='" + idnum + "'></table></div>");
     //$mb("#lupditem",wdoc).html("<textarea id='kika' style='width: 370px; height: 400px; min-width: 230px; max-width: 630px;'></textarea>");
     registerMyListener();
+
     $mb("input[id^='rem']", wdoc).click(function() {
       unregisterMyListener();
       $mb('*', doc).removeClass("tcurrent");
@@ -277,7 +288,7 @@ function pass_path(the_path_style, the_action_type) {
 
     });
     $mb("input[id^='add']", wdoc).click(function() {
-
+      alert("add");
       var tbId = parseInt($mb(this, wdoc).attr('id').substr($mb(this, wdoc).attr('id').length - 1));
       var tbElement = sidebardoc.getElementById("inp" + tbId);
       var rows = parseInt(tbElement.rows.length + 1);
@@ -316,12 +327,27 @@ function clickReporter(e) {
   mySidebarDoc = unwrap(mySidebarDoc);
 
   var request_steps = mySidebarDoc.getElementById("inp" + $mb("li", wdoc).length); // get the element <span id="catchdetails"></span>
+  //var stepDescriptionNum = "stepDes" + $mb("li", wdoc).length;
+  var test_step_title = mySidebarDoc.getElementById("stepDes" + $mb("li", wdoc).length);
   var textareaId = "inp" + countClicks;
+  var checkboxId = "ck" + countClicks;
   //alert("details: " + request_steps);
 
   if (!request_steps) {
     alert("Didn't find catch details");
   }
+
+  // alert("nodeName: " + e.target.nodeName);
+  // alert("tagName: " + e.target.tagName);
+
+  
+  // alert(theNodeDes);
+  // alert("nodeValue: " + e.target.nodeValue);
+  // alert("parentNode: " + e.target.parentNode);
+  if (action_type=="action") {
+
+  }
+  test_step_title.innerHTML = action_type + " " + checkElementDetails(e);
 
   // pringt all need information for right side browser.
 
@@ -329,22 +355,28 @@ function clickReporter(e) {
   var loopCount = 1;
   var style = '';
 
-  if (action_type == "update") {
+  if (action_type == "verify" || action_type=="search") {
+
     if (inner_content(e)) {
+
       for (var x in inner_content(e)) {
-        if ((x === 'pageUrl') || (x === 'action') || (x === 'pathType') || (x === 'pathText')) {
+        if ((x === 'pageUrl') || (x === 'action') || (x === 'pathType') || (x === 'pathText') || (x === 'stepdesc')) {
           style = "style='display:none'";
+          ifToCheck = "<td><input type='checkbox' checked='check' id='" + checkboxId + "_" + loopCount + "' /></td>";
         } else {
           style = '';
+          ifToCheck = "<td><input type='checkbox' id='" + checkboxId + "_" + loopCount + "' /></td>";
         }
-        wartisanHtml += "<tr " + style + "><td>" + x + "</td><td><textarea class='change' id='" + textareaId + "_" + loopCount + "' style='max-height: 70px; min-width: 200px;min-height: 70px; max-width: 200px;'>" + inner_content(e)[x] + "</textarea></td></tr>";
+
+        
+        wartisanHtml += "<tr " + style + ">" + ifToCheck + "<td>" + x + "</td><td><textarea class='change' id='" + textareaId + "_" + loopCount + "' style='max-height: 70px; min-width: 200px;min-height: 70px; max-width: 200px;'>" + inner_content(e)[x] + "</textarea></td></tr>";
+        //alert("1" + wartisanHtml);
         loopCount++;
 
       }
     } else {
-      alert("false");
       var num = "rem" + $mb("input[id^='rem']", wdoc).size();
-      alert("remove wrong step " + num);
+      alert("remove wrong step " + num.substr(3));
       $mb("input[id=" + num + "]", wdoc).click();
     }
 
@@ -373,12 +405,13 @@ function clickReporter(e) {
     //alert("handling actions");
     if (catch_element_action(e)) {
       for (var x in catch_element_action(e)) {
-        if ((x === 'pageUrl') || (x === 'pathType') || (x === 'pathText')) {
+        if ((x === 'pageUrl') || (x=== 'action') || (x === 'pathType') || (x === 'pathText') || (x === 'stepdesc')) {
           style = "style='display:none'";
         } else {
           style = '';
         }
-        wartisanHtml += "<tr " + style + "><td>" + x + "</td><td><span>" + catch_element_action(e)[x] + "</span><textarea style='display:none' class='change' id='" + textareaId + "_" + loopCount + "' style='max-height: 70px; min-width: 200px;min-height: 70px; max-width: 200px;'>" + catch_element_action(e)[x] + "</textarea></td></tr>";
+        wartisanHtml += "<tr " + style + "><td>" + x + "</td><td><span> " + catch_element_action(e)[x] + "</span><textarea style='display:none' class='change' id='" + textareaId + "_" + loopCount + "' style='max-height: 70px; min-width: 200px;min-height: 70px; max-width: 200px;'>" + catch_element_action(e)[x] + "</textarea></td></tr>";
+        
         loopCount++;
 
       }
@@ -414,12 +447,6 @@ function clickReporter(e) {
     alert("unknow action type: " + action_type);
   }
 
-  
-  
-
-
-  
-
 }
 
 // get action on the element
@@ -429,17 +456,18 @@ function catch_element_action(e) {
   sscontent['pageUrl'] = content.document.URL;
   sscontent['action'] = action_type;
   sscontent['pathType'] = path_style;
-  if (path_style=="xpath") {
+  sscontent['stepdesc'] = action_type + " " + checkElementDetails(e);
+  if (path_style == "xpath") {
     //alert(readXPath(e.target));
     sscontent['pathText'] = readXPath(e.target);
-  } else if (path_style=="csspath") {
+  } else if (path_style == "csspath") {
     //alert(readCssPath(e.target));
     sscontent['pathText'] = readCssPath(e.target);
   } else {
     return false;
   }
   //alert(e.type);
-  
+
   sscontent['did'] = e.type;
   //alert(e.type);
   return sscontent;
@@ -455,6 +483,7 @@ function inner_content(e) {
 
   //current target xpath
   sscontent['action'] = action_type;
+  sscontent['stepdesc'] = action_type + " " + checkElementDetails(e);
   if (path_style == "csspath") {
     //alert("report csspath");
     sscontent['pathType'] = path_style;
@@ -633,4 +662,169 @@ function GetAttributes(att) {
   }
   return Properties;
   // || (instElement[attr].name != 'src') || (instElement[attr].name != 'href') || (instElement[attr].name != 'alt') || (instElement[attr].name != 'value')
+}
+
+// function modalWin(edit_id) {
+//   var wartisan_sidebar = top.document.getElementById('sidebar').contentWindow.document.getElementById("createrequestBrowser").contentWindow;
+//   var wdoc = wartisan_sidebar.document;
+//   var sidebardoc = unwrap(wdoc);
+
+//   alert(sidebardoc);
+
+//   var a = new Array;
+//    a[0] = 1;
+//    a[1] = 4;
+//   if (window.showModalDialog) {
+//     alert("step " + edit_id.substr(4) + ":");
+//     var r = top.document.getElementById('sidebar').contentWindow.showModalDialog("http://localhost/wartisan/request_step.php", a,
+//       "dialogWidth:455px;dialogHeight:550px;resizable:yes");
+//     //alert("modalWindow: " + window.document.getElementById("333"));
+//     alert(r);
+//     var xxx = top.document.getElementById('sidebar').contentWindow.document.getElementById("333");
+
+//     sdiebardoc.getElementById('foo').textContent = r;
+//     xxx.getElementById('test').innerHTML = "Hello";
+//     $("#test").innerHTML = "Hello";
+//   } else {
+//     alert("modal window not supported");
+//   }
+
+  
+//   //modalWinDocument = top.document.getElementById(edit_id).contentWindow.document;
+  
+//   alert("2 wartisan_doc: " + wdoc);
+//   //modalWinDocument = top.document.getElementById("sidebar").contentWindow.document.getElementById("createrequestBrowser").contentWindow.document.getElementById("333");
+//   modalWindowDocument = modalWindow.document.getElementById("333");
+//   alert("3 modalWinDocument: " + modalWindow);
+//   modalWinDocument.getElementById('w_title1').innerHTML = "<p>hello</p>";
+//   // alert(3);
+//   alert(modalWinDocument);
+//   // alert(4);
+// }
+
+// sample parent.html
+// <html>
+// <head>
+// <script>
+// function openModal()
+// {
+//   var a = new Array;
+//   a[0] = 1;
+//   a[1] = 4;
+
+//   var r = window.showModalDialog('http://developer.mozilla.org/samples/domref/showModalDialogBox.html',
+//       a, "dialogwidth: 450; dialogheight: 300; resizable: yes");
+//   document.getElementById('foo').textContent = r;
+//   alert(r);
+// }
+// </script>
+// </head>
+ 
+// <body>
+// <input type="button" value="Open modal dialog" onclick="openModal();">
+// <div>
+// <p>Modal dialog return value:</p>
+// <p id="foo">
+// </div>
+// </body>
+// </html>
+
+// Sample child.html
+// <html>
+// <body>
+// <script>
+// document.write("Modal dialog got argument: " + window.dialogArguments);
+// </script>
+// <input id="foo" type="text" value="Dialog value...">
+// <input type="button" value="Close" onclick="window.returnValue = document.getElementById('foo').value; window.close();">
+// <a href="safe.html">link</a>
+// </body>
+// </html>
+
+function checkElementDetails(e) {
+  switch (e.target.nodeType) {
+    case 1:
+      //alert(e.target.nodeName);
+      theNodeDes = "Element " + checkElementNodeName(e.target.nodeName);
+      break;
+    case 2:
+      theNodeDes = "Attr " + e.target.nodeName;
+      break;
+    case 3:
+      theNodeDes = "Text " + e.target.nodeName;
+      break;
+    case 4:
+      theNodeDes = "CDATASection " + e.target.nodeName;
+      break;
+    case 5:
+      theNodeDes = "EntityReference " + e.target.nodeName;
+      break;
+    case 6:
+      theNodeDes = "Entity " + e.target.nodeName;
+      break;
+    case 7:
+      theNodeDes = "ProcessingInstruction " + e.target.nodeName;
+      break;
+    case 8:
+      theNodeDes = "Comment " + e.target.nodeName;
+      break;
+    case 9:
+      theNodeDes = "Document " + e.target.nodeName;
+      break;
+    case 10:
+      theNodeDes = "DocumentType " + e.target.nodeName;
+      break;
+    case 11:
+      theNodeDes = "DocumentFragment " + e.target.nodeName;
+      break;
+    case 12:
+      theNodeDes = "Notation " + e.target.nodeName;
+      break;
+    default:
+      theNodeDes = "Unknown type " + e.target.nodeName;
+  }
+  return theNodeDes;
+}
+
+function checkElementNodeName(nn) {
+  switch (nn) {
+    case "A":
+      return "link";
+      break;
+    case "P":
+      return "paragraph";
+      break;
+    case "IMG":
+      return "image";
+      break;
+    case "DIV":
+      return "div";
+      break;
+    case "B":
+      return "bold text";
+      break;
+    case "I":
+      return "italic text";
+      break;
+    case "INPUT":
+      return "input";
+      break;
+    default:
+      return nn;
+  }
+}
+
+function showHelp() {
+  window.showModalDialog('http://www.wartisan.com', 'help_window', 'dialogWidth=200px;dialogHeight=100px;resizable=yes');
+}
+
+function updateStartingPage(doc) {
+  if ( (doc.getElementById("isStartPageSet").innerHTML == "no") ) {
+    //alert("not set yet");
+    startingPageUrl = content.document.URL;
+    doc.getElementById("currentUrl").innerHTML = startingPageUrl;
+    doc.getElementById("isStartPageSet").innerHTML = "yes";
+  } else {
+    //alert("already set");
+  }
 }
