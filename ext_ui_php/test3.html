@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Wartisan update interface</title>
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="css/style-br.css"/>
+<link rel="stylesheet" type="text/css" href="css/tcal.css" />
+<script src="js/tcal.js"></script> 
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="js/jquery-customize-br.js"></script>
+
+<link rel="stylesheet" type="text/css" href="http://www.adobe.com/ubi/template/identity/adobe/screen.css?modules=treesection" media="screen" />
+<link ref="stylesheet" type="text/css" href="http://www.adobe.com/ubi/template/identity/adobe/screen/common.css" />
+<script type="text/javascript" src="http://www.adobe.com/ubi/template/identity/adobe/Tree.js"></script>
+<script type="text/javascript" src="http://www.adobe.com/ubi/template/identity/lib/prototype.js"></script>
+<script id="adobe" type="text/javascript" src="http://www.adobe.com/ubi/template/identity/adobe.js"></script>
+<script type="text/javascript" src="http://www.adobe.com/ubi/template/identity/adobe/Cookie.js"></script>
+<script type="text/javascript" src="http://www.adobe.com/ubi/template/identity/adobe/global.js"></script> 
+<script type="text/javascript">
+adobe.link("adobe/Tree/treesection/screen.css", {media: "screen"});
+document.observe("dom:loaded", function() {
+	$$(".dyn-treesection").collect(function(el) {
+		return new adobe.Tree(el, {
+			style_uninitialized: "dyn-treesection",
+			style_initialized: "treesection",
+			select_button: ".tree-button"
+		},
+		{
+			toggle_all: "Alt+click to show/hide all features"
+		});
+	});
+});
+</script>
+</head>
+
+
+<body>
+
+<div id="lpanel">
+<!--<div id="lfunc">
+<input type="button" id="newb" class="lfunc" name="newb" value="New!"/>
+<input type="button" id="updateb" class="lfunc" name="updateb" value="Update"/>
+<input type="button" id="deleteb" class="lfunc" name="deleteb" value="Delete"/>
+<input type="button" id="timelb" class="lfunc" name="timelb" value="Timeline"/>
+</div>-->
+
+<div class="starting_url">
+	<p><b><span id="currentUrl"></span></b></p>
+</div>
+
+<form >
+<table id='w_table'>
+<tr>
+<td><div align="right">Request:</div></td>
+<td><input type="text" id="w_title" name="title" value=""></td>
+</tr>
+<tr>
+<td><div align="right">Description:</div></td>
+<td><textarea id="w_description" name="description"></textarea></td>
+</tr>
+</table>
+
+
+
+<!--   <input type="text" id="newb" class="lfunc" name="newb" value="New!"/> -->
+<div id="lmain">
+	<ol id="lupditem"></ol>
+</div>
+<div id="ldate">
+<div style="float: left">
+<table>
+<tr>
+<td><div align="right">Start Date:</div></td>
+<td><input type="text" id="startdate" name="startdate" class="tcal" value=""></td>
+</tr>
+<tr>
+<td><div align="right">End Date:</div></td>
+<td><input type="text" id="enddate" name="enddate" class="tcal" value=""/></td>
+</tr>
+</table>
+</div>
+<div style="float: right; margin-top: 15px; margin-right: 30px;">
+</div>
+</div>
+<div id="lcommit">
+	<input type="button" id="create-user" class="lcommit" name="verifyb" value="Verify"/>
+	<input type="button" id="load" class="lcommit" name="loadb" value="Load"/>
+	<input type="button" id="save" class="lcommit" name="saveb" value="Save"/>
+	<input type="button" id="close" class="lcommit" name="closeb" value="Close"/>
+<!-- <input type="button" id="refresh" class="lcommit" name="refresh" value="Refresh"/> -->
+</div>
+
+</form>
+</div>
+
+<div class="dyn-treesection">
+  		<h2 class="tree-button">Test</h2>
+  		<div class="tree-panel">
+    		<div class="tree-panel-body">
+     			<p>aaaaaaaaaa</p>
+    		</div>
+  		</div>
+  
+  		<h2 class="tree-button">Test</h2>
+  		<div class="tree-panel">
+    		<div class="tree-panel-body">
+     			<p>bbbbbbbbbbb</p>
+    		</div>
+  		</div>
+	</div>
+
+<script>
+	// give date/time a default value - current date
+	var today = new Date();
+
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
+	if(dd<10){dd='0'+dd};
+	if(mm<10){mm='0'+mm};
+
+	today = mm+'/'+dd+'/'+yyyy;
+
+	document.getElementById('startdate').value = today;
+	document.getElementById('enddate').value = today;
+</script>
+
+<p>&nbsp;</p>
+<div id="users-contain" class="ui-widget">
+
+<table id="users" class="ui-widget ui-widget-content">
+<thead>
+<tr class="ui-widget-header "></tr>
+</thead>
+<tbody>
+<tr>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- <input id="foo" type="text" value="Dialog value..."> -->
+</body>
+</html>

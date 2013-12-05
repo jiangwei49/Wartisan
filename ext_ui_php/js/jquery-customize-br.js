@@ -8,9 +8,10 @@ $(document).ready(function() {
   //          alert('aaa');
   //      })
 
-  $("#refresh").click(function() {
-    location.reload(true);
-  })
+  $("#load").click(function() {
+    alert("load button clicked");
+    //location.reload(true);
+  });
 
   $("#save").click(function() {
 
@@ -19,18 +20,31 @@ $(document).ready(function() {
       id++;
 
       var idname = '#inp' + id;
+      var checkboxIdName = 'ck' + id;
       var id2 = 0;
       $(idname + '> tbody > tr').each(function() {
         id2++;
 
-        actions[$(this).find("td:first").text()] = $(idname + '_' + id2).val();
+        //actions[$(this).find("td:first").text()] = $(idname + '_' + id2).val();
+        
+        if ($(this).find("td:first").find("input:checkbox")) { 
+          if ( document.getElementById(checkboxIdName+"_"+id2).checked) {
+            //alert(checkboxIdName);
+            actions[$(this).find("td:nth-child(2)").text()] = $(idname + '_' + id2).val();
+          } else {
+            //alert("no checked");
+            actions[$(this).find("td:nth-child(2)").text()] = "non checking: " + $(idname + '_' + id2).val();
+          }
+        } else {
+          alert("everything should have a checkbox");
+        }
 
       });
+
+      //alert("aaa");
       step.push(actions);
 
     });
-
-
 
     var duration = {};
     duration['startdate'] = $('#startdate').val();
@@ -41,6 +55,7 @@ $(document).ready(function() {
     steps['description'] = $('#w_description').val();
     steps['duration'] = duration;
     steps['steps'] = step;
+    //alert("bbb");
     if ((duration['startdate'] == '') || (duration['enddate'] == '') || (steps['title'] == '') || (steps['description'] == '')) {
       alert('please complete the form');
       return false;
