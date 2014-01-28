@@ -6,7 +6,7 @@
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 		onload='onLoadCreateRequestSidebar();'
 >
-    <script type="application/x-javascript" src="chrome://createrequest/content/jquery.js">//</script>
+    <script type="application/x-javascript" src="chrome://createrequest/content/jquery.js"/>
 	<script type="application/x-javascript" src="chrome://createrequest/content/requestuilibs.js" />
 	<script type="application/x-javascript" src="chrome://createrequest/content/createRequest.js" /> 
 	<script type="application/x-javascript" src="chrome://createrequest/content/helper.js" /> 
@@ -15,10 +15,11 @@
 	<script type="application/x-javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
      <hbox id="fbContentBox">
      	
-        <button class='xulbutton' label='Verify' oncommand="pass_path('xpath', 'verify')"></button>
-        <button class='xulbutton' label="Search" oncommand="pass_path('csspath', 'search')"></button>
-        <button class='xulbutton' label='Record' oncommand="pass_path('xpath', 'action')"></button>
-        <button label='Help' id="help_button" oncommand="showHelp()"  dir='reverse'></button>
+        <button id="record_button" class='xulbutton' label=' Start recording' image='chrome://createrequest/skin/start_record_20x20.png' oncommand="record_path('xpath', 'action')"></button>
+        <button class='xulbutton' label='Verify' oncommand="get_path('xpath', 'verify')"></button>
+        <button class='xulbutton' label="Search" oncommand="get_path('csspath', 'search')"></button>
+        <spacer flex="1"/>
+        <button label="Help " id="help_button" oncommand="showHelp()" image='chrome://createrequest/skin/help_20x20.png' dir='reverse'></button>
     </hbox>
 
 	<browser id="createrequestBrowser" type="content" flex="1"/>

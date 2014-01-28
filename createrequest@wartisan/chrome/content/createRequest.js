@@ -4,7 +4,8 @@ var mainWindow;
 var mySidebarWindow;
 
 function toggleCreateRequest(event){  
-	// open or close the clickmap sidebar
+	// open or close the wartisan sidebar
+    alert("open or close");
     if(!requestSidebarIsOpen()){
     	createRequestInitiator = new Initiator();
         update = true; 
