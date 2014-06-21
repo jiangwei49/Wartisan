@@ -1,3 +1,5 @@
+/* used by listener
+*/
 .tcurrent{
 	outline:1px solid red !important;
 }
@@ -13,6 +15,44 @@
 	cursor:pointer;
 }
 
+.dcurrent{
+	outline:1px solid blue !important;
+}
+
+/* used by sidebar
+*/
+
+* {
+	font-family: arial;
+}
+
+#create-request-toolbar-button {
+	list-style-image: url("chrome://createrequest/skin/toolbar-large.png");
+}
+
+#create-request-status-bar-icon {
+	width: 30px;
+	margin: 0 5px;
+}
+
+.create-request-selected {
+	outline: 2px solid red !important;
+}
+
+
+.typingArea {
+    background-color:#ffff66;
+}
+
+.buttonArea {
+    border-style:groove;
+    border-color:gray;
+}
+
+treechildren::-moz-tree-row(siteHeading) {
+    background-color: #008080;
+}
+
 .xulbutton {
 	background: red;
 	cursor: pointer;
@@ -22,3 +62,15 @@
 #help_button {
   list-style-image: url("chrome://createrequest@wartisan/skin/help_20x20.jpg");
 }
+
+#loginWindow {
+    background-color: #666;
+    border:5px solid rgba(0,0,0,0.4);
+    padding:1px;
+    z-index:5; 
+    font-family:arial;
+    font-size:11px; 
+}
+
+
+

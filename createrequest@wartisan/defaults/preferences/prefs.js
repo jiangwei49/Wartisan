@@ -1,1 +1,1 @@
-pref("extensions.createrequest.autorun", "https://sitecatalyst.omniture.com");
+pref("extensions.createrequest.server", "127.0.0.1");

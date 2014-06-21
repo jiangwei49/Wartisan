@@ -1,3 +1,13 @@
+/* used by sidebar
+*/
+
+#createrequestSidebar {
+	font-family: Verdana;
+    font-size: 12px;
+    font-style:italic;
+    background-color: red;
+}
+
 #create-request-toolbar-button {
 	list-style-image: url("chrome://createrequest/skin/toolbar-large.png");
 }
@@ -9,5 +19,62 @@
 
 .create-request-selected {
 	outline: 2px solid red !important;
+}
+
+
+.typingArea {
+    background-color:#ffff66;
+}
+
+.buttonArea {
+    border-style:groove;
+    border-color:gray;
+}
+
+treechildren::-moz-tree-row(siteHeading) {
+    background-color: #008080;
+}
+
+.xulbutton {
+	background: red;
+	cursor: pointer;
+	font-size: 15px;
+}
+
+
+#help_button {
+  list-style-image: url("chrome://createrequest@wartisan/skin/help_20x20.jpg");
+}
+
+#loginWindow {
+    background-color: #ccc;
+    border:5px solid rgba(0,0,0,0.4);
+    padding:1px;
+    z-index:5; 
+    font-family:arial;
+    font-size:12px; 
+}
+
+#editValueWindow {
+    background-color: #ccc;
+    border:5px solid rgba(0,0,0,0.4);
+    padding:1px;
+    z-index:5; 
+    font-family:arial;
+    font-size:12px; 
+}
+
+#showRelavantRequestsWindow {
+    background-color: #ccc;
+    border:5px solid rgba(0,0,0,0.4);
+    padding:1px;
+    z-index:5; 
+    font-family:arial;
+    font-size:12px; 
+}
+
+#currentPage {
+    font-style: italic;
+    font-weight: bold;
 }
 

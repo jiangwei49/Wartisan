@@ -1,27 +1,163 @@
 <?xml version="1.0"?>
-
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://skin/style.css" type="text/css"?> 
 
 <page id="createRequestSidebar"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-		onload='onLoadCreateRequestSidebar();'
+      xmlns:html="http://www.w3.org/1999/xhtml"
+		
 >
-    <script type="application/x-javascript" src="chrome://createrequest/content/jquery.js"/>
+  <script type="application/x-javascript" src="chrome://createrequest/content/jquery.js"/>
 	<script type="application/x-javascript" src="chrome://createrequest/content/requestuilibs.js" />
-	<script type="application/x-javascript" src="chrome://createrequest/content/createRequest.js" /> 
+	<script type="application/x-javascript" src="chrome://createrequest/content/createRequest.js" />
 	<script type="application/x-javascript" src="chrome://createrequest/content/helper.js" /> 
 	<script type="application/x-javascript" src="chrome://createrequest/content/listener.js"/>
-	<script type="application/x-javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
-	<script type="application/x-javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-     <hbox id="fbContentBox">
-     	
-        <button id="record_button" class='xulbutton' label=' Start recording' image='chrome://createrequest/skin/start_record_20x20.png' oncommand="record_path('xpath', 'action')"></button>
-        <button class='xulbutton' label='Verify' oncommand="get_path('xpath', 'verify')"></button>
-        <button class='xulbutton' label="Search" oncommand="get_path('csspath', 'search')"></button>
-        <spacer flex="1"/>
-        <button label="Help " id="help_button" oncommand="showHelp()" image='chrome://createrequest/skin/help_20x20.png' dir='reverse'></button>
-    </hbox>
 
-	<browser id="createrequestBrowser" type="content" flex="1"/>
-	
+
+  <script>
+    var freqUnit = "hour";    
+  </script>
+
+<script>
+//Moz 1.8
+var treeView = {
+    rowCount : 3,
+    getCellText : function(row,column){
+      if (column.id == "property_to_check") return "Row "+row;
+      else return "February 18";
+    },
+    setTree: function(treebox){ this.treebox = treebox; },
+    isContainer: function(row){ return false; },
+    isSeparator: function(row){ return false; },
+    isSorted: function(){ return false; },
+    getLevel: function(row){ return 0; },
+    getImageSrc: function(row,col){ return null; },
+    getRowProperties: function(row,props){},
+    getCellProperties: function(row,col,props){},
+    getColumnProperties: function(colid,col,props){}
+};
+
+function setView(){
+    //document.getElementById('steps_tree').view = treeView;
+}
+</script>
+  
+
+    <vbox>
+
+      <toolbox flex="1" id="fbContentBox">
+        <menubar>
+          <menu label="Requests ›" id="request_menu" class="menubar_menu">
+            <menupopup>
+                <menuitem label="New" id="new_button1" disabled="true" oncommand="newRequest();"/>
+                <menuitem label="Load" id="load_button1" disabled="true" oncommand="loadRequestDetail();"/>
+                <menuseparator />
+                <menuitem label="Save as new" id="save_button1" disabled="true" oncommand="saveNewRequest(false);"/>
+                <menuitem label="Update" id="save_button2" disabled="true" oncommand="updateRequest();"/>
+                <menuseparator />
+                <menuitem label="Cancel" id="cancel_button1" disabled="true" oncommand="cancelRequest();"/>
+            </menupopup>
+          </menu>
+          <menu label="Actions ›" id="action_menu" class="menubar_menu">
+            <menupopup>
+                <menuitem label="Start recording" class="menuitem-iconic" id="record_button1" image='chrome://createrequest/skin/start_record_20x20.png' oncommand="record_path('xpath', 'action');" disabled="true"/>
+                <menuitem label="Verify" class="menuitem-iconic" id="verify_button1" image='chrome://createrequest/skin/check_20x20.png' oncommand="get_path('xpath', 'verify');" disabled="true"/>
+                <!--<menuitem label="Search" class="menuitem-iconic" id="search_button1" image='chrome://createrequest/skin/search_20x20.png' oncommand="get_path('csspath', 'search');" disabled="true"/>-->
+            </menupopup>
+          </menu>
+        <spacer flex="1"/>
+          <menuitem label="Log in" id="login_button1" oncommand="login();" dir="resverse"></menuitem>
+      </menubar>
+    </toolbox>
+
+      <hbox height="10" />
+
+      <grid flex="1" id="grid1" style="visibility:hidden">
+            <columns>
+                <column>
+                    <label value="Request:"/>
+                    <label value="Description:"/>
+                    <label value="From:"/>
+                    <label value="To:"/>
+                </column>
+                <column flex="1">
+                    <textbox id="request"/>
+                    <textbox row="5" multiline="true" size="30" id="description"/>
+                    <hbox><datepicker id="startdate" type="popup" value="{new Date()}"/><timepicker id="starttime" value="01:30" hideseconds="true"/></hbox>
+                    <hbox><datepicker id="enddate" type="popup" value="{new Date()}"/><timepicker id="endtime" value="23:30:00" hideseconds="true"/></hbox>
+                </column>
+            </columns>
+        </grid>
+
+        <grid id="grid2" style="visibility:hidden">
+          <columns>
+              <column>
+                <label value="Priority:   "/>
+                <label value="Frequency:  "/>
+              </column>
+              <column>
+                <hbox>
+                  <textbox id="priority" type="number" increment="1" max="4" width="50"/>
+                  <label value=" (0~4, 0 is the highest)"/>
+                </hbox>
+                <hbox>
+                  <textbox id="frequency" type="number" value="1" increment="1" max="4" width="50"/>
+                  <label value=" times per "/>
+                  <menulist id='freqUnitList'>
+                    <menupopup id="freqUnitMenu">
+                      <menuitem label="hour" id='freq1' oncommand="freqUnit='hour';" value="hour"/>
+                      <menuitem label="day" id='freq2' oncommand="freqUnit='day';" value="day"/>
+                      <menuitem label="week" id='freq3' oncommand="freqUnit='week';" value="week"/>
+                      <menuitem label="month" id='freq4' oncommand="freqUnit='month';" value="month"/>
+                    </menupopup>
+                  </menulist>
+                </hbox>
+              </column>
+            </columns>
+        </grid>
+
+
+        <hbox height="10" />
+       
+       <hbox>
+       <!--<button class='xulbutton' label='Set start page' oncommand="setStartPage()"></button>-->
+       <description id="startPage" value="...start testing from ..." style="width:300px" hidden="true"/>
+       
+       </hbox>
+       <hbox>
+        <spacer flex="1"/>
+        <button class='xulbutton' id="stepEditButton" label='Edit' onclick="editSelectedTreeRows();" disabled="true" ></button>
+        <button class='xulbutton' id="stepRemoveButton" label='Remove' onclick="removeSelectedTreeRows();" disabled="true" ></button>
+       </hbox>
+
+       <hbox height="10" />
+       
+       
+
+       
+  </vbox>  
+
+  <tree flex="10" id="steps_tree" rows="6" seltype="single" onselect="rowClicked();">
+            <treecols>
+                <treecol label="Steps" id="property_to_check" primary="true" flex="1"/>
+                <treecol label="Condition" id="condition" flex="1"/>
+                <treecol label="Check" id="value_to_check" flex="5" editable="true"/>
+            </treecols>
+            <treechildren id="steps_tree_children">
+                
+            </treechildren>
+        </tree>
+
+  <browser id="contentIFrame" src="http://localhost/requestui/home.html" maxheight="50" type="content-primary" hidechrome="false" width="50" height="150" style="background: transparent;" ></browser>
+
+  <hbox>
+        <!-- stack info and resizer horizontally -->
+        <!-- right align our status bar -->
+        <statusbar id="status-bar">
+            <statusbarpanel flex="1" id="status-text" label="Waiting for login."></statusbarpanel>
+        </statusbar>
+        <spacer flex="1"/>
+  </hbox>
+
+  
 </page>
