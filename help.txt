@@ -16,7 +16,7 @@ jar:
 2.6 Point Firefox extension options: to the server with MongoDB+MySQL
 2.7 Unzip wartisan2.0.zip, file>import>exsiting project, edit suibian.xml, change the two IP to your db server
 2.8 Unzip jar_wartisan2.0.zip, load each jar file as external jar
-2.9 Visit http://docs.seleniumhq.org/download/, download the latest java driver
+2.9 Visit http://docs.seleniumhq.org/download/, download the latest java driver, you will need the json-20080701.jar from seleknium 2.42
 
 3 Run
 3.1 Start $ mongod --rest
